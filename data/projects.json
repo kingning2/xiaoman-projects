@@ -38,7 +38,7 @@
       "id": "xiaoman-projects",
       "name": "个人项目资产库",
       "description": "用 Next.js 静态站点收录并展示个人开源项目与工具，数据来自 JSON，支持其他仓库部署时自动同步。",
-      "githubUrl": "https://github.com/xiaoman/xiaoman-projects",
+      "githubUrl": "https://github.com/kingning2/xiaoman-projects",
       "tags": [
         "Next.js",
         "TypeScript",
