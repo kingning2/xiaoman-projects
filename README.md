@@ -67,6 +67,16 @@ bun run start
                               ▼ deploy.yml 重新构建 GitHub Pages
 ```
 
+### Cursor Agent Skill（推荐）
+
+在其他项目仓库中，可复制资产库的 Agent Skill，让 Cursor 自动完成接入：
+
+```text
+.cursor/skills/register-to-xiaoman-portfolio/
+```
+
+从本仓库复制整个目录到目标项目的 `.cursor/skills/`，或在对话中说「按 xiaoman-projects 资产库 skill 注册到 portfolio」。
+
 ### 一次性配置（每个「其他项目」仓库）
 
 1. **创建 PAT（推荐 Fine-grained）**

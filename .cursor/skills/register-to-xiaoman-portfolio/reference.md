@@ -1,17 +1,15 @@
-# Copy this file to YOUR_OTHER_REPO/.github/workflows/register-to-portfolio.yml
-# Then add secret PORTFOLIO_PAT (fine-grained PAT with Contents: Read and write on xiaoman-projects)
+# register-to-portfolio 工作流完整示例
 
+将以下内容保存为**当前项目**的 `.github/workflows/register-to-portfolio.yml`，并按注释修改。
+
+```yaml
 name: Register to portfolio
 
 on:
-  # Run after your deploy workflow succeeds (rename "Deploy to GitHub Pages" if needed)
   workflow_run:
-    workflows: ["Deploy to GitHub Pages"]
+    workflows: ["Deploy to GitHub Pages"]  # 改成你实际的部署 workflow 名称
     types: [completed]
     branches: [main]
-  # Or register on every push to main (comment out workflow_run above if you prefer this)
-  # push:
-  #   branches: [main]
 
 jobs:
   register:
@@ -28,12 +26,24 @@ jobs:
             {
               "id": "${{ github.event.workflow_run.head_repository.name }}",
               "type": "project",
-              "name": "Your project display name",
-              "description": "One-line description shown on the portfolio card",
+              "name": "在这里填写展示名称",
+              "description": "在这里填写一句话描述",
               "githubUrl": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}",
               "tags": ["Next.js", "TypeScript"],
               "updatedAt": "${{ github.event.workflow_run.updated_at }}"
             }
+```
 
-# For a TOOL repo, set "type": "tool" and add:
-#   "problemSolved": "What problem this tool solves"
+## 工具仓库示例 payload
+
+```json
+{
+  "id": "my-cli",
+  "type": "tool",
+  "name": "my-cli",
+  "description": "简短说明",
+  "problemSolved": "这个 CLI 解决的具体问题",
+  "githubUrl": "https://github.com/owner/my-cli",
+  "tags": ["Node.js", "CLI"]
+}
+```
