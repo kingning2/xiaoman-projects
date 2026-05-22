@@ -18,6 +18,22 @@
       "problemSolved": "本地视频一键生成并烧录中英文字幕，无需云端 API 或手工打轴"
     },
     {
+      "id": "slint-tauri",
+      "name": "Slint 安装器工具链",
+      "description": "Rust + Slint 自定义安装/更新/卸载程序，替代难定制的 NSIS，支持 Windows 与 macOS。",
+      "githubUrl": "https://github.com/kingning2/slint-tauri",
+      "tags": [
+        "Rust",
+        "Slint",
+        "Installer",
+        "Uninstaller",
+        "Windows",
+        "macOS"
+      ],
+      "updatedAt": "2026-05-22",
+      "type": "project"
+    },
+    {
       "type": "project",
       "id": "xiaoman-projects",
       "name": "个人项目资产库",
