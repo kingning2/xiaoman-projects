@@ -83,6 +83,21 @@ jobs:
               problemSolved: (if $problemSolved == "" then null else $problemSolved end)
             } | with_entries(select(.value != null))' > payload.json
 
+      - name: Verify register key
+        if: github.event_name == 'repository_dispatch'
+        env:
+          EXPECTED_KEY: ${{ secrets.PORTFOLIO_REGISTER_KEY }}
+          PROVIDED_KEY: ${{ github.event.client_payload.registerKey }}
+        run: |
+          if [ -z "$EXPECTED_KEY" ]; then
+            echo "::error::PORTFOLIO_REGISTER_KEY is not set on kingning2/xiaoman-projects. Add it in Settings → Secrets → Actions."
+            exit 1
+          fi
+          if [ "$PROVIDED_KEY" != "$EXPECTED_KEY" ]; then
+            echo "::error::Invalid or missing registerKey in client-payload."
+            exit 1
+          fi
+
       - name: Upsert projects.json (repository_dispatch)
         if: github.event_name == 'repository_dispatch'
         run: bun scripts/upsert-asset.ts '${{ toJSON(github.event.client_payload) }}'

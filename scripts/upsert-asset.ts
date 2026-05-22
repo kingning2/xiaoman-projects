@@ -42,6 +42,9 @@ function parsePayload(raw: string): UpsertPayload {
 
   const p = data as Record<string, unknown>;
 
+  // Auth field for repository_dispatch; never stored in projects.json
+  delete p.registerKey;
+
   if (typeof p.id !== "string" || !p.id.trim()) fail("id is required");
   if (p.type !== "project" && p.type !== "tool") {
     fail('type must be "project" or "tool"');

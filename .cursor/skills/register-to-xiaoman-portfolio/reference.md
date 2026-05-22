@@ -1,13 +1,20 @@
-# register-to-portfolio 工作流完整示例
+# register-to-portfolio 工作流示例
 
-将以下内容保存为**当前项目**的 `.github/workflows/register-to-portfolio.yml`，并按注释修改。
+## 协作者仓库 Secrets
+
+| Name | Value |
+| --- | --- |
+| `PORTFOLIO_PAT` | 向资产库主人索取，勿提交 git |
+| `PORTFOLIO_REGISTER_KEY` | 向资产库主人索取，勿提交 git |
+
+## workflow 示例
 
 ```yaml
 name: Register to portfolio
 
 on:
   workflow_run:
-    workflows: ["Deploy to GitHub Pages"]  # 改成你实际的部署 workflow 名称
+    workflows: ["Deploy to GitHub Pages"]
     types: [completed]
     branches: [main]
 
@@ -24,26 +31,19 @@ jobs:
           event-type: upsert-asset
           client-payload: |-
             {
+              "registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}",
               "id": "${{ github.event.workflow_run.head_repository.name }}",
               "type": "project",
-              "name": "在这里填写展示名称",
-              "description": "在这里填写一句话描述",
+              "name": "展示名称",
+              "description": "一句话描述",
               "githubUrl": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}",
               "tags": ["Next.js", "TypeScript"],
               "updatedAt": "${{ github.event.workflow_run.updated_at }}"
             }
 ```
 
-## 工具仓库示例 payload
+## 主人：资产库仓库 Secrets
 
-```json
-{
-  "id": "my-cli",
-  "type": "tool",
-  "name": "my-cli",
-  "description": "简短说明",
-  "problemSolved": "这个 CLI 解决的具体问题",
-  "githubUrl": "https://github.com/owner/my-cli",
-  "tags": ["Node.js", "CLI"]
-}
-```
+仅 **kingning2/xiaoman-projects** 需要：
+
+- `PORTFOLIO_REGISTER_KEY` — 自行生成，与协作者共享同一字符串

@@ -77,23 +77,29 @@ bun run start
 
 从本仓库复制整个目录到目标项目的 `.cursor/skills/`，或在对话中说「按 xiaoman-projects 资产库 skill 注册到 portfolio」。
 
-### 一次性配置（每个「其他项目」仓库）
+### 安全说明（必读）
 
-1. **创建 PAT（推荐 Fine-grained）**
-   - GitHub → Settings → Developer settings → Personal access tokens
-   - 仅授权仓库 `xiaoman-projects`，权限 **Contents: Read and write**
-   - 复制 token
+**切勿**把 PAT 或注册码写进 Skill、README、workflow 或任何 git 文件。只能放在 GitHub Actions Secrets。
 
-2. **在其他项目仓库添加 Secret**
-   - Settings → Secrets → Actions → `PORTFOLIO_PAT` = 上面的 token
+### 主人配置（`xiaoman-projects` 仓库）
 
-3. **复制工作流模板**
+1. Settings → Secrets → Actions → 新建 **`PORTFOLIO_REGISTER_KEY`**（随机长字符串）
+2. 创建 Fine-grained PAT（仅本仓库，Contents: Read and write）
+3. 将 **PAT + 注册码** 私下发给要上架的开发者（不要公开到仓库）
+
+### 协作者配置（每个要上架的项目仓库）
+
+1. Settings → Secrets → Actions：
+   - `PORTFOLIO_PAT` = 主人发来的 PAT
+   - `PORTFOLIO_REGISTER_KEY` = 主人发来的注册码（与资产库一致）
+2. **复制工作流模板**
    - 将本仓库 [templates/register-to-portfolio.yml](templates/register-to-portfolio.yml) 复制到：
      `其他项目/.github/workflows/register-to-portfolio.yml`
    - 修改其中的 `YOUR_GITHUB_USER/xiaoman-projects`、`name`、`description`、`tags` 等字段
    - 若部署 workflow 名称不是 `Deploy to GitHub Pages`，改 `workflow_run.workflows` 列表
+   - payload 必须包含 `"registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}"`
 
-4. **推送后验证**
+3. **推送后验证**
    - 其他项目部署成功后，在 `xiaoman-projects` → Actions 查看 **Sync asset to projects.json**
    - 成功后 `main` 会多一次 commit，并自动触发 Pages 部署
 
