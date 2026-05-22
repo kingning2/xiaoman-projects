@@ -36,6 +36,21 @@
       "featured": true
     },
     {
+      "id": "tauri-template",
+      "name": "MobiXpert",
+      "description": "Tauri 2 + Next.js 桌面工具启动器：圆角无边框主窗、Rust 创建的系统 Modal 子窗口，Command/Event 双通道 IPC。",
+      "githubUrl": "https://github.com/kingning2/tauri-template",
+      "tags": [
+        "Tauri",
+        "Next.js",
+        "TypeScript",
+        "Rust",
+        "Desktop"
+      ],
+      "updatedAt": "2026-05-22",
+      "type": "project"
+    },
+    {
       "type": "project",
       "id": "xiaoman-projects",
       "name": "个人项目资产库",
