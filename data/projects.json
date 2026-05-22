@@ -1,6 +1,23 @@
 {
   "items": [
     {
+      "id": "video-subtitle",
+      "name": "video-subtitle",
+      "description": "视频自动字幕：FFmpeg 提取音频 → Whisper 识别 → SRT → FFmpeg 烧录硬字幕（CLI + Rust 库）",
+      "githubUrl": "https://github.com/kingning2/video-subtitle",
+      "tags": [
+        "Rust",
+        "CLI",
+        "FFmpeg",
+        "Whisper",
+        "字幕",
+        "crates.io"
+      ],
+      "updatedAt": "2026-05-22",
+      "type": "tool",
+      "problemSolved": "本地视频一键生成并烧录中英文字幕，无需云端 API 或手工打轴"
+    },
+    {
       "type": "project",
       "id": "xiaoman-projects",
       "name": "个人项目资产库",
