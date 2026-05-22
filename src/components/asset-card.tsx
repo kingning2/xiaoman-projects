@@ -18,6 +18,7 @@ type AssetCardProps = {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  featured?: boolean;
 };
 
 export function AssetCard({
@@ -25,29 +26,45 @@ export function AssetCard({
   children,
   className,
   style,
+  featured = false,
 }: AssetCardProps) {
   return (
     <a
       href={asset.githubUrl}
       target="_blank"
       rel="noopener noreferrer"
+      data-card-hover
       style={style}
       className={cn(
-        "group/card block h-full outline-none transition-[transform,box-shadow] duration-300 ease-out",
-        "hover:-translate-y-1 hover:shadow-lg active:scale-[0.98] active:duration-150",
-        "focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50",
+        "group/card relative block h-full outline-none will-change-transform",
+        "focus-visible:ring-2 focus-visible:ring-accent-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}
       aria-label={`${asset.name}，前往 GitHub 仓库`}
     >
-      <Card className="h-full border-zinc-200/80 transition-colors duration-300 group-hover/card:border-zinc-300 group-hover/card:bg-white">
-        <CardHeader>
+      <div
+        data-card-glow
+        className="pointer-events-none absolute -inset-2 z-0 rounded-2xl bg-accent-brand/20 opacity-0 blur-2xl"
+        aria-hidden
+      />
+      <Card
+        className={cn(
+          "relative z-10 h-full border-border/80 bg-card/90 backdrop-blur-sm",
+          "group-hover/card:border-accent-brand/50 group-hover/card:shadow-xl group-hover/card:shadow-accent-brand/10",
+          featured && "border-accent-brand/25 lg:min-h-[220px]",
+        )}
+      >
+        {featured ? (
+          <div className="h-1.5 w-full rounded-t-xl bg-linear-to-r from-accent-brand via-accent-brand/80 to-transparent" />
+        ) : null}
+        <CardHeader className={featured ? "pb-2" : undefined}>
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-lg">
+            <CardTitle className={featured ? "text-xl" : "text-lg"}>
               <h3 className="font-semibold tracking-tight">{asset.name}</h3>
             </CardTitle>
             <ArrowUpRight
-              className="size-4 shrink-0 text-zinc-400 transition-all duration-300 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-hover/card:text-zinc-700"
+              data-card-arrow
+              className="size-4 shrink-0 text-muted-foreground"
               aria-hidden
             />
           </div>
@@ -62,7 +79,7 @@ export function AssetCard({
               <Badge
                 key={tag}
                 variant="secondary"
-                className="font-mono text-xs transition-colors group-hover/card:bg-zinc-100"
+                className="font-mono text-xs group-hover/card:border-accent-brand/30 group-hover/card:bg-accent-brand/10"
               >
                 {tag}
               </Badge>

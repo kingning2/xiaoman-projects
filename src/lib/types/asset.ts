@@ -7,6 +7,8 @@ export type AssetBase = {
   tags: string[];
   /** ISO 8601，如 2025-03-15 */
   updatedAt: string;
+  /** 首页精选展示 */
+  featured?: boolean;
 };
 
 export type Project = AssetBase & {

@@ -1,10 +1,18 @@
 "use client";
 
-import { Children, useState } from "react";
+import { Children, useEffect, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { ProjectCard } from "@/components/project-card";
 import { ToolCard } from "@/components/tool-card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  prefersReducedMotion,
+  registerGsapPlugins,
+} from "@/lib/gsap/register";
+import { cn } from "@/lib/utils";
 import type { Project, Tool } from "@/lib/types/asset";
 
 type AssetTabsProps = {
@@ -12,12 +20,10 @@ type AssetTabsProps = {
   tools: Tool[];
 };
 
-function AnimatedGrid({
-  tabKey,
+function AssetGrid({
   emptyLabel,
   children,
 }: {
-  tabKey: string;
   emptyLabel: string;
   children: React.ReactNode;
 }) {
@@ -25,78 +31,159 @@ function AnimatedGrid({
 
   if (items.length === 0) {
     return (
-      <p className="py-12 text-center text-sm text-zinc-500">{emptyLabel}</p>
+      <p className="py-12 text-center text-sm text-muted-foreground">
+        {emptyLabel}
+      </p>
     );
   }
 
   return (
-    <div key={tabKey} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((child, index) => (
-        <div
-          key={tabKey + String(index)}
-          className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both duration-500"
-          style={{ animationDelay: `${index * 60}ms` }}
-        >
-          {child}
-        </div>
-      ))}
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {items}
     </div>
   );
 }
 
 export function AssetTabs({ projects, tools }: AssetTabsProps) {
   const [activeTab, setActiveTab] = useState("projects");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const projectsPanelRef = useRef<HTMLDivElement>(null);
+  const toolsPanelRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const tabListRef = useRef<HTMLDivElement>(null);
+
+  const moveIndicator = () => {
+    const activeTrigger = tabListRef.current?.querySelector<HTMLElement>(
+      "[data-active]",
+    );
+    const indicator = indicatorRef.current;
+    if (!activeTrigger || !indicator || !tabListRef.current) return;
+
+    const listRect = tabListRef.current.getBoundingClientRect();
+    const tabRect = activeTrigger.getBoundingClientRect();
+    gsap.to(indicator, {
+      x: tabRect.left - listRect.left,
+      width: tabRect.width,
+      duration: 0.5,
+      ease: "power3.inOut",
+    });
+  };
+
+  useGSAP(
+    () => {
+      registerGsapPlugins();
+      moveIndicator();
+
+      if (prefersReducedMotion()) return;
+
+      const panel =
+        activeTab === "projects"
+          ? projectsPanelRef.current
+          : toolsPanelRef.current;
+      if (!panel) return;
+
+      gsap.fromTo(
+        panel,
+        { opacity: 0, y: 50, scale: 0.92, filter: "blur(8px)" },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 0.65,
+          ease: "power3.out",
+        },
+      );
+    },
+    { dependencies: [activeTab], scope: rootRef },
+  );
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      moveIndicator();
+    });
+    return () => cancelAnimationFrame(id);
+  }, [activeTab]);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList
-        variant="line"
-        className="mb-8 h-auto w-full justify-start gap-1 border-b border-zinc-200 bg-transparent p-0"
-      >
-        <TabsTrigger
-          value="projects"
-          className="rounded-none px-4 py-2.5 data-active:after:bg-zinc-900"
-        >
-          项目
-          <span className="ml-1.5 font-mono text-xs text-zinc-400 tabular-nums">
-            {projects.length}
-          </span>
-        </TabsTrigger>
-        <TabsTrigger
-          value="tools"
-          className="rounded-none px-4 py-2.5 data-active:after:bg-zinc-900"
-        >
-          工具
-          <span className="ml-1.5 font-mono text-xs text-zinc-400 tabular-nums">
-            {tools.length}
-          </span>
-        </TabsTrigger>
-      </TabsList>
+    <div ref={rootRef} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div data-reveal className="mb-8">
+          <h2 className="text-lg font-semibold tracking-tight">全部资产</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            按类型浏览项目与工具
+          </p>
+        </div>
 
-      <TabsContent value="projects" className="mt-0 outline-none">
-        <p className="mb-6 text-sm text-zinc-500">
+        <div ref={tabListRef} className="relative mb-8 border-b border-border">
+          <span
+            ref={indicatorRef}
+            className="pointer-events-none absolute bottom-0 left-0 z-10 h-0.5 rounded-full bg-accent-brand"
+            style={{ width: 0 }}
+            aria-hidden
+          />
+          <TabsList
+            variant="line"
+            className="relative h-auto w-full justify-start gap-1 bg-transparent p-0 [&_[data-active]]:after:!opacity-0"
+          >
+            <TabsTrigger
+              value="projects"
+              className="rounded-none px-4 py-2.5 data-active:text-foreground"
+            >
+              项目
+              <span className="ml-1.5 font-mono text-xs text-muted-foreground tabular-nums">
+                {projects.length}
+              </span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="tools"
+              className="rounded-none px-4 py-2.5 data-active:text-foreground"
+            >
+              工具
+              <span className="ml-1.5 font-mono text-xs text-muted-foreground tabular-nums">
+                {tools.length}
+              </span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
+      </Tabs>
+
+      <div
+        ref={projectsPanelRef}
+        className={cn(activeTab !== "projects" && "hidden")}
+        role="tabpanel"
+        hidden={activeTab !== "projects"}
+      >
+        <p className="mb-6 text-sm text-muted-foreground">
           长期维护的开源与应用项目 · 点击卡片打开 GitHub
         </p>
-        <AnimatedGrid
-          tabKey={`projects-${activeTab}`}
-          emptyLabel="暂无项目"
-        >
+        <AssetGrid emptyLabel="暂无项目">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <div key={project.id} data-reveal-item>
+              <ProjectCard project={project} />
+            </div>
           ))}
-        </AnimatedGrid>
-      </TabsContent>
+        </AssetGrid>
+      </div>
 
-      <TabsContent value="tools" className="mt-0 outline-none">
-        <p className="mb-6 text-sm text-zinc-500">
+      <div
+        ref={toolsPanelRef}
+        className={cn(activeTab !== "tools" && "hidden")}
+        role="tabpanel"
+        hidden={activeTab !== "tools"}
+      >
+        <p className="mb-6 text-sm text-muted-foreground">
           为解决具体问题而编写的 CLI 与小工具 · 点击卡片打开 GitHub
         </p>
-        <AnimatedGrid tabKey={`tools-${activeTab}`} emptyLabel="暂无工具">
+        <AssetGrid emptyLabel="暂无工具">
           {tools.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
+            <div key={tool.id} data-reveal-item>
+              <ToolCard tool={tool} />
+            </div>
           ))}
-        </AnimatedGrid>
-      </TabsContent>
-    </Tabs>
+        </AssetGrid>
+      </div>
+    </div>
   );
 }

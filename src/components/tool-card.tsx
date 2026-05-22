@@ -3,12 +3,13 @@ import type { Tool } from "@/lib/types/asset";
 
 type ToolCardProps = {
   tool: Tool;
+  featured?: boolean;
 };
 
-export function ToolCard({ tool }: ToolCardProps) {
+export function ToolCard({ tool, featured }: ToolCardProps) {
   return (
     <article>
-      <AssetCard asset={tool}>
+      <AssetCard asset={tool} featured={featured}>
         <div className="space-y-1 rounded-lg border border-border/60 bg-muted/40 px-3 py-2.5">
           <p className="text-xs font-medium text-muted-foreground">
             解决的问题
