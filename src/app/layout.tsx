@@ -52,6 +52,7 @@ export default function RootLayout({
       lang="zh-CN"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <meta name="google-site-verification" content="cP79W1SgEeVV9gNafyqYLpUMVKK5oYM2Hj7R6YUKrvU" />
       <body className="min-h-full bg-zinc-50 font-sans text-zinc-900">
         {children}
       </body>

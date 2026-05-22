@@ -1,0 +1,40 @@
+# Copy this file to YOUR_OTHER_REPO/.github/workflows/register-to-portfolio.yml
+# Then add secret PORTFOLIO_PAT (fine-grained PAT with Contents: Read and write on xiaoman-projects)
+
+name: Register to portfolio
+
+on:
+  # Run after your deploy workflow succeeds (rename "Deploy to GitHub Pages" if needed)
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
+    branches: [main]
+  # Or register on every push to main (comment out workflow_run above if you prefer this)
+  # push:
+  #   branches: [main]
+
+jobs:
+  register:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send asset to xiaoman-projects
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PORTFOLIO_PAT }}
+          # TODO: replace with your GitHub username/org
+          repository: YOUR_GITHUB_USER/xiaoman-projects
+          event-type: upsert-asset
+          client-payload: |-
+            {
+              "id": "${{ github.event.workflow_run.head_repository.name }}",
+              "type": "project",
+              "name": "Your project display name",
+              "description": "One-line description shown on the portfolio card",
+              "githubUrl": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}",
+              "tags": ["Next.js", "TypeScript"],
+              "updatedAt": "${{ github.event.workflow_run.updated_at }}"
+            }
+
+# For a TOOL repo, set "type": "tool" and add:
+#   "problemSolved": "What problem this tool solves"
