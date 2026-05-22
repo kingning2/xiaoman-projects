@@ -95,7 +95,7 @@ bun run start
 2. **复制工作流模板**
    - 将本仓库 [templates/register-to-portfolio.yml](templates/register-to-portfolio.yml) 复制到：
      `其他项目/.github/workflows/register-to-portfolio.yml`
-   - 修改其中的 `YOUR_GITHUB_USER/xiaoman-projects`、`name`、`description`、`tags` 等字段
+   - 修改 `name`、`description`、`tags` 等字段（仓库路径已为 `kingning2/xiaoman-projects`）
    - 若部署 workflow 名称不是 `Deploy to GitHub Pages`，改 `workflow_run.workflows` 列表
    - payload 必须包含 `"registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}"`
 
