@@ -101,7 +101,7 @@ bun run start
 
 3. **推送后验证**
    - 其他项目部署成功后，在 `xiaoman-projects` → Actions 查看 **Sync asset to projects.json**
-   - 成功后 `main` 会多一次 commit，并自动触发 Pages 部署
+   - 成功后 `main` 会多一次 commit；**Sync asset** 结束时会自动触发 **Deploy to GitHub Pages**（bot 推送默认不会连锁触发 workflow，已在 sync 里显式 dispatch）
 
 ### 工具类仓库
 

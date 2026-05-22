@@ -37,6 +37,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: sync-asset
@@ -107,13 +108,29 @@ jobs:
         run: bun scripts/upsert-asset.ts "$(cat payload.json)"
 
       - name: Commit and push
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/projects.json
           if git diff --staged --quiet; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             echo "No changes to commit"
             exit 0
           fi
           git commit -m "chore(assets): update $(jq -r .id payload.json)"
           git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # GITHUB_TOKEN 的 push 默认不会触发其他 workflow，需显式 dispatch 部署
+      - name: Trigger Deploy to GitHub Pages
+        if: steps.commit.outputs.pushed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "deploy.yml",
+              ref: "main",
+            });
