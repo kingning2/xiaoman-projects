@@ -1,0 +1,51 @@
+{
+  "items": [
+    {
+      "type": "project",
+      "id": "xiaoman-projects",
+      "name": "个人项目资产库",
+      "description": "用 Next.js 静态站点收录并展示个人开源项目与工具，数据来自 JSON，便于长期维护。",
+      "githubUrl": "https://github.com/xiaoman/xiaoman-projects",
+      "tags": ["Next.js", "TypeScript", "Tailwind CSS"],
+      "updatedAt": "2025-05-22"
+    },
+    {
+      "type": "project",
+      "id": "portfolio",
+      "name": "个人主页",
+      "description": "独立开发者风格的主页，展示简介、项目链接与联系方式。",
+      "githubUrl": "https://github.com/xiaoman/portfolio",
+      "tags": ["Next.js", "React"],
+      "updatedAt": "2025-04-10"
+    },
+    {
+      "type": "project",
+      "id": "notes-app",
+      "name": "极简笔记",
+      "description": "本地优先的 Markdown 笔记应用，支持标签与全文搜索。",
+      "githubUrl": "https://github.com/xiaoman/notes-app",
+      "tags": ["Rust", "Tauri", "SQLite"],
+      "updatedAt": "2025-03-01"
+    },
+    {
+      "type": "tool",
+      "id": "repo-rename-cli",
+      "name": "repo-rename",
+      "description": "命令行工具，按规则批量重命名 Git 仓库目录与 remote 配置。",
+      "problemSolved": "迁移或整理多个 GitHub 仓库时，减少手工重命名与配置错误。",
+      "githubUrl": "https://github.com/xiaoman/repo-rename",
+      "tags": ["Node.js", "CLI"],
+      "updatedAt": "2025-02-20"
+    },
+    {
+      "type": "tool",
+      "id": "json-diff-viewer",
+      "name": "json-diff",
+      "description": "在终端或浏览器中对比两份 JSON 的结构差异，输出可读报告。",
+      "problemSolved": "调试 API 响应或配置文件变更时，快速定位字段级差异。",
+      "githubUrl": "https://github.com/xiaoman/json-diff",
+      "tags": ["TypeScript", "CLI"],
+      "updatedAt": "2025-01-15"
+    }
+  ]
+}
