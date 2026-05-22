@@ -67,13 +67,9 @@ description: >-
 
 路径：`.github/workflows/register-to-portfolio.yml`
 
-从 `templates/register-to-portfolio.yml` 复制，并修改 `name`、`description`、`tags`、`type`（及工具的 `problemSolved`）。
+从 `templates/register-to-portfolio.yml` 复制（使用 **github-script** 发 dispatch，不要手写 JSON 字符串）。
 
-payload **必须**包含：
-
-```json
-"registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}"
-```
+修改脚本中的 `ASSET_*` 常量：`ASSET_TYPE`、`ASSET_NAME`、`ASSET_DESCRIPTION`、`ASSET_TAGS`，工具类再加 `ASSET_PROBLEM_SOLVED`。
 
 ### 4. 验证
 
@@ -101,6 +97,7 @@ payload **必须**包含：
 | PORTFOLIO_REGISTER_KEY is not set | 主人未在 xiaoman-projects 配置该 Secret |
 | 403 Bad credentials | `PORTFOLIO_PAT` 无效或未授权资产库 Contents 写权限 |
 | register 不触发 | 检查 `workflow_run.workflows` 名称 |
+| Bad control character in JSON | 勿用 peter-evans/repository-dispatch 手写 JSON；改用模板里的 github-script；检查 Secret 无末尾换行 |
 
 ## 禁止
 

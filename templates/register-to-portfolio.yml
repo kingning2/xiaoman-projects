@@ -1,11 +1,10 @@
 # Copy to: YOUR_REPO/.github/workflows/register-to-portfolio.yml
 #
-# Required secrets in YOUR repo (Settings → Secrets → Actions):
-#   PORTFOLIO_PAT          — ask kingning2/xiaoman-projects owner (never commit to git)
-#   PORTFOLIO_REGISTER_KEY — same value as owner's portfolio repo secret
+# Secrets (Settings → Actions):
+#   PORTFOLIO_PAT
+#   PORTFOLIO_REGISTER_KEY
 #
-# Owner setup (xiaoman-projects repo only):
-#   PORTFOLIO_REGISTER_KEY — random string you share privately with contributors
+# Edit the ASSET_* constants in the script below for your project.
 
 name: Register to portfolio
 
@@ -21,21 +20,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send asset to xiaoman-projects
-        uses: peter-evans/repository-dispatch@v3
+        uses: actions/github-script@v7
+        env:
+          PORTFOLIO_REGISTER_KEY: ${{ secrets.PORTFOLIO_REGISTER_KEY }}
         with:
-          token: ${{ secrets.PORTFOLIO_PAT }}
-          repository: kingning2/xiaoman-projects
-          event-type: upsert-asset
-          client-payload: |-
-            {
-              "registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}",
-              "id": "${{ github.event.workflow_run.head_repository.name }}",
-              "type": "project",
-              "name": "Your project display name",
-              "description": "One-line description shown on the portfolio card",
-              "githubUrl": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}",
-              "tags": ["Next.js", "TypeScript"],
-              "updatedAt": "${{ github.event.workflow_run.updated_at }}"
+          github-token: ${{ secrets.PORTFOLIO_PAT }}
+          script: |
+            const wr = context.payload.workflow_run;
+            const repo = wr.head_repository;
+
+            // --- customize for your repo ---
+            const ASSET_TYPE = "project"; // "project" | "tool"
+            const ASSET_NAME = "Your project display name";
+            const ASSET_DESCRIPTION = "One-line description for the portfolio card";
+            const ASSET_TAGS = ["Next.js", "TypeScript"];
+            const ASSET_PROBLEM_SOLVED = "Required when ASSET_TYPE is tool";
+            // --- end customize ---
+
+            const updatedRaw = wr.updated_at || new Date().toISOString();
+            const updatedAt = String(updatedRaw).slice(0, 10);
+
+            const payload = {
+              registerKey: (process.env.PORTFOLIO_REGISTER_KEY || "").trim(),
+              id: repo.name,
+              type: ASSET_TYPE,
+              name: ASSET_NAME,
+              description: ASSET_DESCRIPTION,
+              githubUrl: `https://github.com/${repo.full_name}`,
+              tags: ASSET_TAGS,
+              updatedAt,
+            };
+
+            if (ASSET_TYPE === "tool") {
+              payload.problemSolved = ASSET_PROBLEM_SOLVED;
             }
 
-# Tool repo: "type": "tool" + "problemSolved": "..."
+            if (!payload.registerKey) {
+              core.setFailed("PORTFOLIO_REGISTER_KEY secret is missing");
+              return;
+            }
+
+            await github.rest.repos.createDispatchEvent({
+              owner: "kingning2",
+              repo: "xiaoman-projects",
+              event_type: "upsert-asset",
+              client_payload: payload,
+            });

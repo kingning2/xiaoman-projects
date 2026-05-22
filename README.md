@@ -75,7 +75,7 @@ bun run start
 .cursor/skills/register-to-xiaoman-portfolio/
 ```
 
-从本仓库复制整个目录到目标项目的 `.cursor/skills/`，或在对话中说「按 xiaoman-projects 资产库 skill 注册到 portfolio」。
+从本仓库复制整个目录到目标项目的 `.cursor/skills/`，或已安装到全局 `~/.cursor/skills/register-to-xiaoman-portfolio/`（所有项目可用）。在对话中说「注册到 xiaoman portfolio」即可触发。
 
 ### 安全说明（必读）
 
@@ -97,7 +97,7 @@ bun run start
      `其他项目/.github/workflows/register-to-portfolio.yml`
    - 修改 `name`、`description`、`tags` 等字段（仓库路径已为 `kingning2/xiaoman-projects`）
    - 若部署 workflow 名称不是 `Deploy to GitHub Pages`，改 `workflow_run.workflows` 列表
-   - payload 必须包含 `"registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}"`
+   - 使用模板中的 **github-script** 发送 dispatch（不要手写 JSON，避免 `Bad control character` 错误）
 
 3. **推送后验证**
    - 其他项目部署成功后，在 `xiaoman-projects` → Actions 查看 **Sync asset to projects.json**

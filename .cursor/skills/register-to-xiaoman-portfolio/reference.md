@@ -1,46 +1,19 @@
 # register-to-portfolio 工作流示例
 
+使用 **actions/github-script** 构建 JSON，避免手写 `client-payload` 导致 `Bad control character in string literal`（常见于 Secret 末尾换行、YAML 多行字符串、描述里的引号）。
+
 ## 协作者仓库 Secrets
 
 | Name | Value |
 | --- | --- |
 | `PORTFOLIO_PAT` | 向资产库主人索取，勿提交 git |
-| `PORTFOLIO_REGISTER_KEY` | 向资产库主人索取，勿提交 git |
+| `PORTFOLIO_REGISTER_KEY` | 向资产库主人索取，勿提交 git；粘贴 Secret 时勿带换行 |
 
 ## workflow 示例
 
-```yaml
-name: Register to portfolio
+见资产库 `templates/register-to-portfolio.yml`，或 GitHub：
 
-on:
-  workflow_run:
-    workflows: ["Deploy to GitHub Pages"]
-    types: [completed]
-    branches: [main]
-
-jobs:
-  register:
-    if: github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send asset to xiaoman-projects
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.PORTFOLIO_PAT }}
-          repository: kingning2/xiaoman-projects
-          event-type: upsert-asset
-          client-payload: |-
-            {
-              "registerKey": "${{ secrets.PORTFOLIO_REGISTER_KEY }}",
-              "id": "${{ github.event.workflow_run.head_repository.name }}",
-              "type": "project",
-              "name": "展示名称",
-              "description": "一句话描述",
-              "githubUrl": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}",
-              "tags": ["Next.js", "TypeScript"],
-              "updatedAt": "${{ github.event.workflow_run.updated_at }}"
-            }
-```
+https://github.com/kingning2/xiaoman-projects/blob/main/templates/register-to-portfolio.yml
 
 ## 主人：资产库仓库 Secrets
 
