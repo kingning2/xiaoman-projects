@@ -13,9 +13,8 @@
         "字幕",
         "crates.io"
       ],
-      "updatedAt": "2026-05-22",
+      "updatedAt": "2026-05-25",
       "type": "tool",
-      "featured": true,
       "problemSolved": "本地视频一键生成并烧录中英文字幕，无需云端 API 或手工打轴"
     },
     {
