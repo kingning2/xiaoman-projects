@@ -1,6 +1,21 @@
 {
   "items": [
     {
+      "id": "tauri-template",
+      "name": "MobiXpert",
+      "description": "Tauri 2 + Next.js 桌面工具启动器：圆角无边框主窗、Rust 创建的系统 Modal 子窗口，Command/Event 双通道 IPC。",
+      "githubUrl": "https://github.com/kingning2/tauri-template",
+      "tags": [
+        "Tauri",
+        "Next.js",
+        "TypeScript",
+        "Rust",
+        "Desktop"
+      ],
+      "updatedAt": "2026-05-29",
+      "type": "project"
+    },
+    {
       "id": "video-subtitle",
       "name": "video-subtitle",
       "description": "视频自动字幕：FFmpeg 提取音频 → Whisper 识别 → SRT → FFmpeg 烧录硬字幕（CLI + Rust 库）",
@@ -33,21 +48,6 @@
       "updatedAt": "2026-05-22",
       "type": "project",
       "featured": true
-    },
-    {
-      "id": "tauri-template",
-      "name": "MobiXpert",
-      "description": "Tauri 2 + Next.js 桌面工具启动器：圆角无边框主窗、Rust 创建的系统 Modal 子窗口，Command/Event 双通道 IPC。",
-      "githubUrl": "https://github.com/kingning2/tauri-template",
-      "tags": [
-        "Tauri",
-        "Next.js",
-        "TypeScript",
-        "Rust",
-        "Desktop"
-      ],
-      "updatedAt": "2026-05-22",
-      "type": "project"
     },
     {
       "type": "project",
