@@ -17,6 +17,22 @@
       "type": "project"
     },
     {
+      "id": "SupportFlow",
+      "name": "SupportFlow",
+      "description": "Tauri 2 + Next.js 桌面端，内置 SupportFlow 控制台（AI Elements 流式对话、Rust agent runtime），Command/Event IPC 与 Modal 子窗口。",
+      "githubUrl": "https://github.com/kingning2/SupportFlow",
+      "tags": [
+        "Tauri",
+        "Next.js",
+        "SupportFlow",
+        "AI Elements",
+        "Rust",
+        "Desktop"
+      ],
+      "updatedAt": "2026-05-30",
+      "type": "project"
+    },
+    {
       "id": "tauri-template",
       "name": "MobiXpert",
       "description": "Tauri 2 + Next.js 桌面工具启动器：圆角无边框主窗、Rust 创建的系统 Modal 子窗口，Command/Event 双通道 IPC。",
