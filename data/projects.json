@@ -1,6 +1,23 @@
 {
   "items": [
     {
+      "id": "imgflow",
+      "type": "tool",
+      "name": "imgflow",
+      "description": "硬件自适应的 Rust 批量图片转码库与 CLI，支持 WebP、JPEG、PNG、AVIF、GIF",
+      "githubUrl": "https://github.com/kingning2/imgflow",
+      "tags": [
+        "Rust",
+        "CLI",
+        "image",
+        "transcode",
+        "WebP",
+        "AVIF"
+      ],
+      "updatedAt": "2026-07-06",
+      "problemSolved": "批量转换图片格式时，根据 CPU 与内存自动调整线程池与通道容量，提供高效稳定的转码流水线"
+    },
+    {
       "id": "SupportFlow",
       "name": "SupportFlow",
       "description": "Tauri 2 + Next.js 桌面端，内置 SupportFlow 控制台（AI Elements 流式对话、Rust agent runtime），Command/Event IPC 与 Modal 子窗口。",
